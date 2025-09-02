@@ -1,0 +1,16 @@
+# symbol list used if UNIVERSE_FILE is set (first line ignored if starts with #)
+AAPL
+MSFT
+NVDA
+META
+AMD
+PLTR
+AMZN
+TSLA
+SPY
+QQQ
+IWM
+SDS
+SPXU
+SQQQ
+TZA
