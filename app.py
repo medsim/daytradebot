@@ -22,7 +22,7 @@ def healthz():
 
 @app.get("/")
 def root():
-    return {"service": "Trading Bot API", "status": "running"}
+    return {"service": "Trading Bot API", "status": "running", "docs": "/docs"}
 
 @app.get("/orders", response_model=List[Order])
 def list_orders(status: Optional[str] = Query(default=None)):
