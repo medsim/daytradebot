@@ -1,29 +1,42 @@
-from __future__ import annotations
-import threading, time
-from fastapi import FastAPI
-from bot_daytrade.loop import run_bot_forever, stop_signal, last_heartbeat
+import os
+from typing import List, Optional
+from fastapi import FastAPI, Query
+from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI(title="Trading Bot API", version="1.0.0")
 
-thread_handle = None
+class Order(BaseModel):
+    id: str
+    symbol: str
+    side: str
+    qty: int
+    status: str
 
-def _start_loop():
-    t = threading.Thread(target=run_bot_forever, name="bot-loop", daemon=True)
-    t.start()
-    return t
-
-@app.on_event("startup")
-def _startup():
-    global thread_handle
-    thread_handle = _start_loop()
+class Position(BaseModel):
+    symbol: str
+    qty: int
+    avg_price: float
 
 @app.get("/healthz")
 def healthz():
-    hb = last_heartbeat()
-    running = not stop_signal.is_set()
-    return {"ok": True, "running": running, "last_heartbeat": hb}
+    return {"status": "ok"}
 
-@app.on_event("shutdown")
-def _shutdown():
-    stop_signal.set()
-    time.sleep(0.5)
+@app.get("/")
+def root():
+    return {
+        "service": "Trading Bot API",
+        "status": "running",
+        "docs": "/docs",
+        "redoc": "/redoc"
+    }
+
+# Stub endpoints to prevent 404s in health checks / monitoring
+@app.get("/orders", response_model=List[Order])
+def list_orders(status: Optional[str] = Query(default=None)):
+    # Return an empty list by default; wire to your broker later
+    return []
+
+@app.get("/positions", response_model=List[Position])
+def list_positions():
+    # Return an empty list by default; wire to your broker later
+    return []
