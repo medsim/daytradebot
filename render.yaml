@@ -7,7 +7,6 @@ services:
     envVars:
       - key: TIMEZONE
         value: America/New_York
-      # Add your broker/API secrets here or set them in the Render dashboard
       - key: TRADIER_ACCESS_TOKEN
         sync: false
       - key: TRADIER_ACCOUNT_ID

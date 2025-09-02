@@ -1,4 +1,3 @@
-# Core deps (from your build log)
 pandas==2.2.2
 numpy==1.26.4
 python-dateutil==2.9.0.post0
@@ -12,7 +11,6 @@ certifi==2025.8.3
 six==1.17.0
 tzdata==2025.2
 
-# Web stack
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
 gunicorn==22.0.0
