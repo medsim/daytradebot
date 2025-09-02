@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: daytrade-bot
+    env: docker
+    plan: starter
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: TRADIER_ACCESS_TOKEN
+        sync: false
+      - key: TRADIER_ACCOUNT_ID
+        sync: false
+      - key: TRADIER_BASE_URL
+        value: https://sandbox.tradier.com
+      - key: EODHD_API_KEY
+        sync: false
+      - key: TIMEZONE
+        value: America/New_York
+      - key: MAX_OPEN
+        value: "5"
+      - key: MAX_TRADES
+        value: "20"
+      - key: CAP_BASE
+        value: "750"
+      - key: CAP_BOOST
+        value: "1000"
+      - key: RISK_PCT
+        value: "0.004"
+      - key: NO_ENTRY_BEFORE
+        value: "09:45"
+      - key: FORCE_FLAT_AT
+        value: "15:55"
+      - key: START_EQUITY
+        value: "20000"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: POLL_INTERVAL_SEC
+        value: "20"
+      - key: DATA_INTERVAL
+        value: 5m
