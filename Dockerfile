@@ -1,20 +1,23 @@
-# syntax=docker/dockerfile:1
-FROM python:3.11-slim AS builder
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 VIRTUAL_ENV=/opt/venv
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-WORKDIR /tmp
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt &&     python - <<'PY'
-import uvicorn, fastapi; print('OK uvicorn', uvicorn.__version__); print('OK fastapi', fastapi.__version__)
-PY
 
-FROM python:3.11-slim AS runtime
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 VIRTUAL_ENV=/opt/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# Python slim base
+FROM python:3.11-slim
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
-COPY . /app
+
+# Copy and install
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# The service binds to $PORT (Render/Heroku)
+ENV PORT=8000
+
+# Expose port (optional for some PaaS)
 EXPOSE 8000
-# Use absolute path for uvicorn; shell expands ${PORT:-8000}
-CMD ["/bin/sh","-lc","exec /opt/venv/bin/uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"]
+
+# Default command
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

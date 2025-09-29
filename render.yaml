@@ -1,13 +1,19 @@
+
 services:
   - type: web
-    name: trading-bot-api
+    name: daytradebot
     env: docker
     plan: starter
+    healthCheckPath: /health
     autoDeploy: true
     envVars:
-      - key: TIMEZONE
-        value: America/New_York
-      - key: TRADIER_ACCESS_TOKEN
+      - key: TRADIER_BASE
+        sync: false
+      - key: TRADIER_TOKEN
         sync: false
       - key: TRADIER_ACCOUNT_ID
         sync: false
+      - key: ENABLE_LIVE_TRADES
+        value: "false"
+      - key: PORT
+        value: "8000"

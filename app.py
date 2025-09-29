@@ -1,33 +1,29 @@
-from typing import List, Optional
-from fastapi import FastAPI, Query
-from pydantic import BaseModel
 
-app = FastAPI(title="Trading Bot API", version="1.0.0")
+import os
+from fastapi import FastAPI
+from dotenv import load_dotenv
 
-class Order(BaseModel):
-    id: str
-    symbol: str
-    side: str
-    qty: int
-    status: str
+from brokers.tradier_client import profile, accounts, balances
+from utils.strategy import try_trade
 
-class Position(BaseModel):
-    symbol: str
-    qty: int
-    avg_price: float
+load_dotenv(override=True)
 
-@app.get("/healthz")
-def healthz():
-    return {"status": "ok"}
+app = FastAPI(title="daytradebot patch", version="1.0.0")
 
-@app.get("/")
-def root():
-    return {"service": "Trading Bot API", "status": "running", "docs": "/docs"}
+@app.get("/health")
+def health():
+    return {"ok": True}
 
-@app.get("/orders", response_model=List[Order])
-def list_orders(status: Optional[str] = Query(default=None)):
-    return []
+@app.get("/ping_tradier")
+def ping_tradier():
+    out = {}
+    for name, fn in [("profile", profile), ("accounts", accounts), ("balances", balances)]:
+        r = fn()
+        out[name] = {"status_code": r.status_code, "text": (r.text or "")[:2000]}
+    return out
 
-@app.get("/positions", response_model=List[Position])
-def list_positions():
-    return []
+@app.post("/trade/test")
+def trade_test(symbol: str = "AAPL", last_price: float = 30.0, signal: str = "buy"):
+    allow_live = os.getenv("ENABLE_LIVE_TRADES", "false").lower() == "true"
+    res = try_trade(symbol=symbol, signal=signal, last_price=last_price, allow_live=allow_live)
+    return {"allow_live": allow_live, "result": res}
