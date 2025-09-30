@@ -20,5 +20,5 @@ def ping():
 
 @app.api_route("/trade/test", methods=["GET","POST"])
 def trade(symbol: str="F", last_price: float=12.0, signal: str="buy", min_notional: float=50.0):
-    allow_live = os.getenv("ENABLE_LIVE_TRADES","false").lower()=="true"
+    allow_live = os.getenv("ENABLE_LIVE_TRADES","true").lower()=="true"
     return {"allow_live": allow_live, "result": try_trade(symbol, signal, last_price, allow_live, min_notional)}
