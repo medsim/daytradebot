@@ -4,8 +4,8 @@ from zoneinfo import ZoneInfo
 import math
 from brokers.tradier_client import market_is_open, balances, preview_equity, place_equity
 
-DEFAULT_MIN_NOTIONAL = 50.0
-MAX_RISK_PCT = 0.10
+DEFAULT_MIN_NOTIONAL = 10.0
+MAX_RISK_PCT = 0.15
 ASSUMED_EQUITY = 6000.0
 
 def get_wallet():
@@ -22,7 +22,9 @@ def get_wallet():
     }
 
 def calc_qty(price, equity=ASSUMED_EQUITY):
-    return max(0, math.floor((MAX_RISK_PCT * equity) / max(price, 0.01)))
+    import math
+    qty = max(0, math.floor((MAX_RISK_PCT * equity) / max(price, 0.01)))
+    return max(qty, 1)  # ensure at least 1 share
 
 def try_trade(symbol, signal, last_price, allow_live=False, min_notional=DEFAULT_MIN_NOTIONAL):
     now = datetime.now(ZoneInfo("America/New_York"))
