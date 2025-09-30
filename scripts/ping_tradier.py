@@ -1,22 +1,12 @@
 
-from brokers.tradier_client import profile, accounts, balances, positions, orders, preview_equity
+from brokers.tradier_client import profile, balances, positions, orders, preview_equity
 
-def show(title, r):
-    print("\n==", title, "==")
-    try:
-        print(r.status_code)
-        print((r.text or "")[:4000])
-    except Exception as e:
-        print("error printing response:", e)
+def show(name, r):
+    print(f"\n== {name} ==")
+    print(r.status_code, (r.text or "")[:2000])
 
-for title, fn in [
-    ("Profile", profile),
-    ("Accounts", accounts),
-    ("Balances", balances),
-    ("Positions", positions),
-    ("Orders (history)", orders),
-]:
-    show(title, fn())
-
-print("\n== Preview SPY buy 1 ==")
-show("Preview", preview_equity("SPY", "buy", 1))
+show("Profile", profile())
+show("Balances", balances())
+show("Positions", positions())
+show("Orders", orders())
+show("Preview", preview_equity("F","buy",1))
