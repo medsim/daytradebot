@@ -5,10 +5,11 @@ import math
 
 from brokers.tradier_client import market_is_open, balances, preview_equity_market, place_equity_limit, quote as q_fast, positions
 
-DEFAULT_MIN_NOTIONAL = 10.0
-MAX_RISK_PCT         = 0.20
-ASSUMED_EQUITY       = 6000.0
-MAX_GROSS_EXPOSURE   = 0.80
+# --- Moderate-Aggressive Tunings ---
+DEFAULT_MIN_NOTIONAL = 10.0      # keep tiny trades allowed
+MAX_RISK_PCT         = 0.25      # 25% of equity per trade (more assertive sizing)
+ASSUMED_EQUITY       = 6000.0    # used when balances not available
+MAX_GROSS_EXPOSURE   = 0.85      # allow larger concurrent exposure
 
 def get_wallet():
     r = balances()
@@ -25,7 +26,7 @@ def get_wallet():
 
 def calc_qty(price, equity=ASSUMED_EQUITY, qty_cap=None):
     qty = max(0, math.floor((MAX_RISK_PCT * equity) / max(price, 0.01)))
-    qty = max(qty, 1)
+    qty = max(qty, 1)  # 1-share floor
     if qty_cap is not None:
         qty = min(qty, int(qty_cap))
     return qty
@@ -64,7 +65,7 @@ def try_trade(symbol: str, signal: str, last_price: float, allow_live: bool=Fals
     resp = place_equity_limit(symbol, "buy", qty, limit_price=limit)
     return {"status":"sent", "side":"buy", "qty":qty, "symbol":symbol, "limit":limit, "resp_code":resp.status_code, "resp_body":resp.text, "balances":w}
 
-# Auto-exit helpers
+# ---- Auto exits (unchanged) ----
 def _positions_map():
     r = positions()
     if r.status_code != 200:
