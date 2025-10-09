@@ -1,7 +1,7 @@
-def midpoint(bid: float, ask: float) -> float:
+def midpoint(bid, ask):
     if bid and ask:
         return (bid + ask) / 2.0
     return max(bid, ask)
 
-def tick_offset(px: float, ticks: int, tick_size: float = 0.01) -> float:
+def tick_offset(px, ticks, tick_size=0.01):
     return px + ticks * tick_size

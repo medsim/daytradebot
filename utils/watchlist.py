@@ -1,3 +1,4 @@
+
 def load_watchlist(path: str):
     syms = []
     try:
@@ -8,6 +9,5 @@ def load_watchlist(path: str):
                     continue
                 syms.append(s)
     except FileNotFoundError:
-        # default small list if not provided
         syms = ["AAPL","MSFT","NVDA","AMD","META","TSLA","IONQ","PLTR","SOFI","INTC"]
     return syms
