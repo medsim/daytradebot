@@ -1,3 +1,4 @@
+
 import os, requests
 TRADIER_BASE = os.getenv("TRADIER_BASE", "https://api.tradier.com/v1")
 TRADIER_TOKEN = os.getenv("TRADIER_TOKEN")
