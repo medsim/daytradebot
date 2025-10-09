@@ -3,12 +3,13 @@ services:
   - type: worker
     name: tradier-fastbot
     env: python
-    region: oregon
     plan: starter
     autoDeploy: true
     buildCommand: pip install -r requirements.txt
     startCommand: python app_fast.py
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: TRADIER_TOKEN
         sync: false
       - key: TRADIER_ACCOUNT_ID
