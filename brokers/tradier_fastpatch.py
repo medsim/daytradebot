@@ -17,7 +17,7 @@ class TradierBroker:
         q = (r.json().get("quotes", {}) or {}).get("quote", {})
         if isinstance(q, list):
             q = q[0] if q else {}
-        return {"symbol": q.get("symbol"), "bid": float(q.get("bid", 0)), "ask": float(q.get("ask", 0)), "last": float(q.get("last", 0)), "volume": int(q.get("volume", 0))}
+        return {"symbol": q.get("symbol"), "bid": float(q.get("bid", 0) or 0), "ask": float(q.get("ask", 0) or 0), "last": float(q.get("last", 0) or 0), "volume": int(q.get("volume", 0) or 0)}
 
     def submit_order(self, order: dict):
         if self.preview_only:
