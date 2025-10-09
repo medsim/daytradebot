@@ -3,7 +3,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from utils.logging import get_logger
 from utils.market import market_is_open
 from utils.watchlist import load_watchlist
-
 from bot_daytrade.strategy_fastbreak import FastBreakStrategy
 from brokers.tradier_fastpatch import TradierBroker
 
