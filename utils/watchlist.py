@@ -1,9 +1,13 @@
 def load_watchlist(path: str):
     syms = []
-    with open(path, "r") as f:
-        for line in f:
-            s = line.strip().upper()
-            if not s or s.startswith("#"):
-                continue
-            syms.append(s)
+    try:
+        with open(path, "r") as f:
+            for line in f:
+                s = line.strip().upper()
+                if not s or s.startswith("#"):
+                    continue
+                syms.append(s)
+    except FileNotFoundError:
+        # default small list if not provided
+        syms = ["AAPL","MSFT","NVDA","AMD","META","TSLA","IONQ","PLTR","SOFI","INTC"]
     return syms
